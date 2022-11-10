@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ParsingJsonTest {
 
-    private String urlToTest = " https://playground.learnqa.ru/api/get_json_homework";
+    private String urlToTest = "https://playground.learnqa.ru/api/get_json_homework";
     private String textOfSecondMessageExpected = "And this is a second message";
     private String messageIfFail = "Content is not correct";
 
