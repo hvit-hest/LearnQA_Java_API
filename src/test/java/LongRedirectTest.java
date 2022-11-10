@@ -31,7 +31,7 @@ public class LongRedirectTest {
                 System.out.println(urlToTest);
             }
         }
-        //Better to use with a counter in case we never get the 200 code
+        //Better to use with a counter also if in case we never get the 200 code
         while (responseCodeActual != 200);
 
         //assert since it has to be a test
