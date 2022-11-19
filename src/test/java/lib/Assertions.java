@@ -80,8 +80,8 @@ public class Assertions {
     }
 
     private static String truncateSeconds(String dateToTruncate) {
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
-        //without minutes and seconds
         return ZonedDateTime.from(formatter.parse(dateToTruncate)).truncatedTo(ChronoUnit.MINUTES).toString();
     }
 
