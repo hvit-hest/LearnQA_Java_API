@@ -34,7 +34,7 @@ public class Assertions {
                     .overridingErrorMessage(String.format("Response doesn't have '%s' header", headerNameExpected))
                     .isTrue();
 
-            if (headersActual.get(headerNameExpected) != null) {
+            if (headersActual.hasHeaderWithName(headerNameExpected)) {
                 String headerValueActual = headersActual.get(headerNameExpected).getValue();
 
                 if (headerNameExpected.equals("Date") || headerNameExpected.equals("Expires")) {
@@ -70,21 +70,20 @@ public class Assertions {
                     .overridingErrorMessage(String.format("Response doesn't have '%s' cookie", cookieNameExpected))
                     .isTrue();
 
-            if (cookiesActual.get(cookieNameExpected) != null) {
-                softAssertions.assertThat(cookiesActual.get(cookieNameExpected))
+            if (cookiesActual.containsKey(cookieNameExpected))
+            softAssertions.assertThat(cookiesActual.get(cookieNameExpected))
                         .overridingErrorMessage(String.format("'%s' cookie has wrong value '%s'",
                                 cookieNameExpected, cookiesActual.get(cookieNameExpected)))
                         .isEqualTo(cookieValueExpected);
-            }
         });
         softAssertions.assertAll();
     }
 
     private static String truncateSeconds(String dateToTruncate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+        //without minutes and seconds
         return ZonedDateTime.from(formatter.parse(dateToTruncate)).truncatedTo(ChronoUnit.MINUTES).toString();
     }
-
 
     //Simple, one cookie assertion -just template for future
     public static void assertCookieByNameAndValue(Response response, String cookieNameExpected, String cookieValueExpected) {
@@ -106,5 +105,27 @@ public class Assertions {
         assertEquals(headerValueExpected, headersActual.get(headerNameExpected).getValue(),
                 String.format("Header value expected '%s' actual is '%s'",
                         headerValueExpected, headersActual.get(headerNameExpected).getValue()));
+    }
+
+    public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap) {
+        String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
+        String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
+        //add-on to JUnit
+        SoftAssertions softAssertions = new SoftAssertions();
+        expectedMap.entrySet().forEach(entry -> {
+            String expectedKey = entry.getKey();
+            String expectedValue = entry.getValue();
+
+            softAssertions.assertThat(actualMap.containsKey(expectedKey))
+                    .overridingErrorMessage(String.format(assertMessageIfKeyIsAbsent, expectedKey))
+                    .isTrue();
+
+            if (actualMap.containsKey(expectedKey))
+            softAssertions.assertThat(actualMap.get(expectedKey))
+                    .overridingErrorMessage(String.format(assertMessageIfFailToCompare,
+                            actualMap.get(expectedKey), expectedValue, expectedKey))
+                    .isEqualTo(expectedValue);
+        });
+        softAssertions.assertAll();
     }
 }
