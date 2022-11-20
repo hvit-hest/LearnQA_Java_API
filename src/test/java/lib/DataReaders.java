@@ -12,15 +12,18 @@ import java.util.List;
 
 public class DataReaders {
 
-    public static  List<UserAgentDataModel> readDataFromJson(String jsonDataFile) {
+    public static List<UserAgentDataModel> readDataFromJson(String jsonDataFile) {
         Type dataType = new TypeToken<List<UserAgentDataModel>>() {
         }.getType();
         Gson gson = new Gson();
         JsonReader reader = null;
         try {
+
+            /*InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(jsonArrayFile);
+            getClass() - We can not use it here since readDataFromJson - static */
+
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             InputStream resourceAsStream = cl.getResourceAsStream(jsonDataFile);
-            //InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(jsonArrayFile);
 
             reader = new JsonReader(new InputStreamReader(resourceAsStream));
         } catch (NullPointerException ioe) {
