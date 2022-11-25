@@ -2,15 +2,10 @@ import datamodel.UserAgentDataModel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Map;
-
 import static lib.Assertions.mapContains;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 public class UserAgentTest {
 
@@ -35,9 +30,7 @@ public class UserAgentTest {
             default:
                 throw new IllegalArgumentException(String.format("Method '%s' is not implemented yet", testData.getMethod()));
         }
-
         responseForCheck.prettyPrint();
         mapContains(responseForCheck.jsonPath().getMap("$"), testData.getExpectedValues());
     }
 }
-
