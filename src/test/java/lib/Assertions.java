@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.not;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -108,11 +109,20 @@ public class Assertions {
                         headerValueExpected, headersActual.get(headerNameExpected).getValue()));
     }
 
-    public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap) {
+    public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap, boolean compareSize) {
         String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
         String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
+        String assertMessageIfSizeIsDifferent = "Actual map size '%s' vs. expected map size '%s'";
+
         //add-on to JUnit
         SoftAssertions softAssertions = new SoftAssertions();
+
+        if (compareSize)
+        { softAssertions.assertThat(actualMap.size() == expectedMap.size())
+            .overridingErrorMessage(String.format(assertMessageIfSizeIsDifferent, actualMap.size(), expectedMap.size()))
+            .isTrue();
+        }
+
         expectedMap.entrySet().forEach(entry -> {
             String expectedKey = entry.getKey();
             String expectedValue = entry.getValue();
@@ -134,5 +144,33 @@ public class Assertions {
         response.then().assertThat().body("$", hasKey(name));
         int value = response.jsonPath().getInt(name);
         assertEquals(expectedValue, value, "JSON value is not equal to expected value");
+    }
+
+    public static void assertJsonByName(Response response, String name, String expectedValue) {
+        response.then().assertThat().body("$", hasKey(name));
+        String value = response.jsonPath().getString(name);
+        assertEquals(expectedValue, value, "JSON value is not equal to expected value");
+    }
+
+    public static void assertResponseTextEquals(Response response, String expectedAnswer) {
+        assertEquals(expectedAnswer, response.asString(),
+                String.format("Response is different. Expected '%s' vs. Actual '%s'", expectedAnswer, response.asString()));
+    }
+
+    public static void assertResponseCodeEquals(Response response, int expectedStatusCode) {
+        assertEquals(expectedStatusCode, response.statusCode(),
+                String.format("Status Code is different. Expected '%s' vs. Actual '%s'", expectedStatusCode,response.statusCode()));
+    }
+
+    public static void assertJsonHasField(Response response, String expectedFieldName) {
+        response.then().assertThat().body("$", hasKey(expectedFieldName));
+    }
+    public static void assertJsonHasFields(Response response, String[] expectedFieldNames) {
+        for (String expectedFieldName : expectedFieldNames) {
+            assertJsonHasField(response, expectedFieldName);
+        }
+    }
+    public static void assertJsonHasNotField(Response response, String unexpectedFieldName) {
+        response.then().assertThat().body("$", not(hasKey(unexpectedFieldName)));
     }
 }

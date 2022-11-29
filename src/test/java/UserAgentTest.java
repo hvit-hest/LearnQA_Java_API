@@ -31,6 +31,6 @@ public class UserAgentTest {
                 throw new IllegalArgumentException(String.format("Method '%s' is not implemented yet", testData.getMethod()));
         }
         responseForCheck.prettyPrint();
-        mapContains(responseForCheck.jsonPath().getMap("$"), testData.getExpectedValues());
+        mapContains(responseForCheck.jsonPath().getMap("$"), testData.getExpectedValues(), false);
     }
 }

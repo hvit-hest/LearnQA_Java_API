@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.stream.Stream;
 
+import static lib.DataGenerator.dateGenerator;
+
 public class CookiesHeadersProvider {
 
     private static DataModel cookiesTestData = new DataModel()
@@ -33,11 +35,6 @@ public class CookiesHeadersProvider {
                 put("Cache-Control", "max-age=0");
                 put("Expires", dateGenerator());
             }});
-
-    private static String dateGenerator() {
-        return ZonedDateTime.now(TimeZone.getTimeZone("GMT").toZoneId())
-                .format(DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm:ss z", Locale.US));
-    }
 
     public static Stream<DataModel> provideTestData() {
         return Stream.of(cookiesTestData, cookiesTestData.setMethod("post"),
