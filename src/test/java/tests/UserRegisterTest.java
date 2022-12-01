@@ -1,29 +1,38 @@
 package tests;
 
-import io.restassured.RestAssured;
+import datamodel.UserRegisterDataModel;
+import io.qameta.allure.Allure;
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static lib.DataGenerator.getRandomEmail;
-
+@Feature("Create user cases")
 public class UserRegisterTest extends BaseTestCase {
+    ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
     @Test
     public void testCreateUserWithExistingEmail() {
         String email = "vinkotov@example.com";
+        Map<String, String> userData = new HashMap<String, String>() {{
+            put("email", email);
+        }};
 
-        Map<String, String> userData = new HashMap<String, String>() {{put("email", email);}};
         userData = DataGenerator.getRegistrationData(userData);
-        Response responseCreateAuth = RestAssured
-                .given()
-                .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
-                .andReturn();
+        Response responseCreateAuth = apiCoreRequests.makePostRequest("https://playground.learnqa.ru/api/user/", userData);
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);
         Assertions.assertResponseTextEquals(responseCreateAuth,
                 String.format("Users with email '%s' already exists", email));
@@ -31,16 +40,19 @@ public class UserRegisterTest extends BaseTestCase {
 
     @Test
     public void testCreateUserSuccessfully() {
-        String email = getRandomEmail();
-
-        Map<String, String> userData =  DataGenerator.getRegistrationData();
-        Response responseCreateAuth = RestAssured
-                .given()
-                .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
-                .andReturn();
-
+        Map<String, String> userData = DataGenerator.getRegistrationData();
+        Response responseCreateAuth = apiCoreRequests.makePostRequest("https://playground.learnqa.ru/api/user/", userData);
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);
         Assertions.assertJsonHasField(responseCreateAuth, "id");
+    }
+
+    @DisplayName("Negative tests. Create user.")
+    @ParameterizedTest(name="[{index}] {argumentsWithNames} ")
+    @MethodSource("dataprovider.UserRegisterProvider#provideTestData")
+    public void testUserMethodNegative(UserRegisterDataModel testData) {
+
+        Allure.description(testData.getTestDescription());
+        Response response = apiCoreRequests.requestGenerator(testData, testData.getRequestDescription());
+        Assertions.assertResponse(response, testData);
     }
 }

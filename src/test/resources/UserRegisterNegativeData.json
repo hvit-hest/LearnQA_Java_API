@@ -1,0 +1,296 @@
+[
+  {
+    "testID": "0001_createUserWrongEmailNegative",
+    "testDescription": "User with incorrect email/without @ can not be created. Email 'DasIstFantastisch'. ",
+    "requestDescription": "Post request with email 'DasIstFantastisch' w/o '@'. ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "DasIstFantastisch",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "Invalid email format",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0002_createUserWrongEmailNegative",
+    "testDescription": "User with incorrect email/without @ can not be created. Email ''. ",
+    "testType": "negative",
+    "requestDescription": "Post request with email ''  w/o @",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'email' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0003_createUserWrongEmailNegative",
+    "testDescription": "User with incorrect email/without @ can not be created. Email ' '. ",
+    "testType": "negative",
+    "requestDescription": "Post request with email ' ' i.e. w/o '@'. ",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": " ",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'email' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0004_createUserWithShortNameNegative",
+    "testDescription": "User with too short name (1 symbol) can not be created. 'Chinese names feature?' ",
+    "testType": "negative",
+    "requestDescription": "Post request with a short name (1symbol). ",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "W",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'username' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0005_createUserWithShortNameNegative",
+    "testDescription": "User with too short name (1 symbol) can not be created. 1 number name",
+    "testType": "negative",
+    "requestDescription": "Post request with a short name (1symbol). ",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "6",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'username' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0006_createUserWithShortNameNegative",
+    "testDescription": "User with too short name (1 symbol) can not be created. 1 letter name",
+    "testType": "negative",
+    "requestDescription": "Post request with a short name (1symbol). ",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": " ",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'username' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0007_createUserWithShortNameNegative",
+    "testDescription": "User with too short name (1 symbol) can not be created. 1 gap name ' ' ",
+    "testType": "negative",
+    "requestDescription": "Post request with a short name (1symbol). ",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": " ",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'username' field is too short",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0008_createUserWithLongNameNegative",
+    "testDescription": "User with name that is longer 250 symbols can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request with a long name (251 symbol)",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "generateLongString251",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The value of 'username' field is too long",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0009_createUserWithoutEmailNegative",
+    "testDescription": "User without email can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request without email",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "password": "generatePassword",
+      "username": "generateEmail",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The following required params are missed: email",
+      "responseCode": 400
+    }
+  },
+   {
+    "testID": "0010_createUserWithoutPasswordNegative",
+    "testDescription": "User without password can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request without password",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "username": "generateUserName",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The following required params are missed: password",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0011_createUserWithoutUserNameNegative",
+    "testDescription": "User without username can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request without username",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The following required params are missed: username",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0012_createUserWithoutLastNameNegative",
+    "testDescription": "User without last name can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request without lastName",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "firstName": "generateFirstName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The following required params are missed: lastName",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0013_createUserWithoutFirstNameNegative",
+    "testDescription": "User without first name can not be created",
+    "testType": "negative",
+    "requestDescription": "Post request without firstName",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "textMessageInBody",
+      "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "The following required params are missed: firstName",
+      "responseCode": 400
+    }
+  }
+]

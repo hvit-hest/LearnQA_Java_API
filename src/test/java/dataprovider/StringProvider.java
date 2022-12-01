@@ -5,6 +5,6 @@ import java.util.stream.Stream;
 public class StringProvider {
 
     public static Stream<String> stringProvider() {
-        return Stream.of(null, RandomStringUtils.randomAlphabetic(0,15), RandomStringUtils.randomAlphabetic(16,255));
+        return Stream.of(null, RandomStringUtils.randomAlphanumeric(0,15), RandomStringUtils.randomAlphanumeric(15,255));
     }
 }

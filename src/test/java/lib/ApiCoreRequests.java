@@ -1,10 +1,12 @@
 package lib;
 
+import datamodel.UserRegisterDataModel;
 import io.qameta.allure.Step;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 import java.util.Map;
 
@@ -49,4 +51,26 @@ public class ApiCoreRequests {
                 .andReturn();
     }
 
+    //String requestDescription -> {1}
+    @Step("{1}")
+    public Response requestGenerator(UserRegisterDataModel testData, String requestDescription) {
+        Response response;
+        RequestSpecification reqspec = RestAssured.given();
+
+        if (testData.getCookies() != null) reqspec.cookies(testData.getCookies());
+        if (testData.getHeaders() != null) reqspec.headers(testData.getHeaders());
+        if (testData.getUserData() != null) reqspec.body(DataGenerator.getRegistrationDataAlt(testData.getUserData()));
+
+        switch (testData.getMethod()) {
+            case "get":
+                response = reqspec.get(testData.getTestUrl());
+                break;
+            case "post":
+                response = reqspec.post(testData.getTestUrl());
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Method '%s' is not implemented yet", testData.getMethod()));
+        }
+        return response;
+    }
 }
