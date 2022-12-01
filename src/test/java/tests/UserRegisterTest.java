@@ -48,7 +48,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     @DisplayName("Negative tests. Create user.")
     @ParameterizedTest(name="[{index}] {argumentsWithNames} ")
-    @MethodSource("dataprovider.UserRegisterProvider#provideTestData")
+    @MethodSource("dataprovider.DataProvider#provideUserRegisterTestData")
     public void testUserMethodNegative(UserRegisterDataModel testData) {
 
         Allure.description(testData.getTestDescription());
