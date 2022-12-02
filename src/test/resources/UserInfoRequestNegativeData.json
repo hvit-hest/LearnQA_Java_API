@@ -1,0 +1,21 @@
+[
+  {
+    "testID": "0014_getUserDataNegative",
+    "testDescription": "User's data can not be obtained by other user",
+    "requestDescription": "Get user data using incorrect authorisation, i.e. token 'x-csrf-token' & cookie 'auth_sid' ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "get",
+    "whatToTest": [
+      "responseCode",
+      "username",
+      "hasFieldNames",
+      "numberOfFieldsTheSame"
+    ],
+    "//": "Nothing is universal in the Universe. Expected username:value will be added programmatically, i.e. dynamically",
+    "expectedValues": {
+      "hasFieldNames": "username",
+      "responseCode": 200
+    }
+  }
+]

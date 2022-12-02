@@ -1,0 +1,20 @@
+[
+  {
+    "testID": "0015_loginUserPositive",
+    "testDescription": "User with correct data can login",
+    "requestDescription": "Post request to login with correct data. ",
+    "testType": "positive",
+    "testUrl": "https://playground.learnqa.ru/api/user/login",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword"
+    },
+    "whatToTest": [
+      "responseCode"
+    ],
+    "expectedValues": {
+      "responseCode": 200
+    }
+  }
+]

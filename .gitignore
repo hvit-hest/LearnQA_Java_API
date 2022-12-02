@@ -119,5 +119,6 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
-/allure-results/
-/.allure/
+allure-report/
+allure-results/
+.allure/

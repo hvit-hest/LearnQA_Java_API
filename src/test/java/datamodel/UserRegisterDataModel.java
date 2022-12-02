@@ -47,22 +47,30 @@ public class UserRegisterDataModel {
         return headers;
     }
 
-    ;
-
     public Map<String, String> getCookies() {
         return cookies;
     }
-
-    ;
-
     public Map<String, String> getUserData() {
         return userData;
     }
-
-    ;
-
     public Map<String, String> getExpectedValues() {
         return expectedValues;
+    }
+
+    public void setUserData(Map<String, String> userData) {
+        this.userData = userData;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
+
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
+    public void setTestUrl(String testUrl) {
+        this.testUrl = testUrl;
     }
 
     @Override
@@ -70,24 +78,3 @@ public class UserRegisterDataModel {
         return String.format("TestID: '%s'. Description: '%s'", testID, testDescription);
     }
 }
-
-/*[
-        {
-        "testID": "0001_createUserWrongEmailNegative",
-        "testDescription": "User with incorrect email/without @ can not be created. Email ''",
-        "testType": "negative",
-        "requestDescription": ""
-        "testUrl": "https://playground.learnqa.ru/api/user/",
-        "method": "post",
-        "userData": {
-        "email": "",
-        "password": "generate",
-        "username": "generate",
-        "firstName": "generate",
-        "lastName": "generate"
-        },
-        "whatToTest": ["textMessageInBody", "responseCode"],
-        "expectedValues": {
-        "textMessageInBody": "The value of 'email' field is too short"
-        "responseCode": 400
-        }*/

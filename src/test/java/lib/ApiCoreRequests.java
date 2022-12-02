@@ -59,7 +59,11 @@ public class ApiCoreRequests {
 
         if (testData.getCookies() != null) reqspec.cookies(testData.getCookies());
         if (testData.getHeaders() != null) reqspec.headers(testData.getHeaders());
-        if (testData.getUserData() != null) reqspec.body(DataGenerator.getRegistrationDataAlt(testData.getUserData()));
+        if (testData.getUserData() != null) {
+            Map<String, String> userDataGenerated = DataGenerator.getRegistrationDataAlt(testData.getUserData());
+            testData.setUserData(userDataGenerated);
+            reqspec.body(userDataGenerated);
+        }
 
         switch (testData.getMethod()) {
             case "get":

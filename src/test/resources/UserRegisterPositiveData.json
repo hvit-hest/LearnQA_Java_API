@@ -1,0 +1,26 @@
+[
+  {
+    "testID": "0015_createUserPositive",
+    "testDescription": "User with correct data can be created",
+    "requestDescription": "Post request with with correct data. ",
+    "testType": "positive",
+    "testUrl": "https://playground.learnqa.ru/api/user/",
+    "method": "post",
+    "userData": {
+      "email": "generateEmail",
+      "password": "generatePassword",
+      "username": "generateUserName",
+      "firstName": "generateFirstName",
+      "lastName": "generateLastName"
+    },
+    "whatToTest": [
+      "responseCode",
+      "hasFieldNames",
+      "numberOfFieldsTheSame"
+    ],
+    "expectedValues": {
+      "hasFieldNames": "user_id",
+      "responseCode": 200
+    }
+  }
+]

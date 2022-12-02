@@ -179,27 +179,56 @@ public class Assertions {
     }
 
     public static void assertResponse(Response response, UserRegisterDataModel testData) {
-        //add-on to JUnit
-        SoftAssertions softAssertions = new SoftAssertions();
-        Arrays.stream(testData.getWhatToTest()).forEach(s -> {
-        //WhatToTest - array from json
-            switch (s) {
-                case "textMessageInBody":
-             /*     response.then().assertThat().body(Matchers.hasXPath(String.format("//html/body[text()='%s']",testData.getExpectedValues().get(s))));
+        if (testData.getWhatToTest() != null && testData.getWhatToTest().length != 0) {
+            //add-on to JUnit
+            SoftAssertions softAssertions = new SoftAssertions();
+            Arrays.stream(testData.getWhatToTest()).forEach(s -> {
+                //WhatToTest - array from json
+                switch (s) {
+                    case "textMessageInBody":
+             /* Try to use it one day
+             response.then().assertThat().body(Matchers.hasXPath(String.format("//html/body[text()='%s']",testData.getExpectedValues().get(s))));
             response.then().assertThat().body(Matchers.hasXPath("//html/body", containsString(testData.getExpectedValues().get(s))));*/
 
 
-                    softAssertions.assertThat(response.getBody().htmlPath().getString("//html/body"))
-                            .isEqualTo(testData.getExpectedValues().get(s));
-                    break;
-                case "responseCode":
-                    softAssertions.assertThat(response.statusCode())
-                            .isEqualTo(Integer.parseInt(testData.getExpectedValues().get(s)));
-                    break;
-                default:
-                    throw new IllegalArgumentException(String.format("Test '%s' is not implemented yet", testData.getExpectedValues().get(s)));
-            }
-        });
-        softAssertions.assertAll();
+                        softAssertions.assertThat(response.getBody().htmlPath().getString("//html/body"))
+                                .isEqualTo(testData.getExpectedValues().get(s));
+                        break;
+                    case "responseCode":
+                        softAssertions.assertThat(response.statusCode())
+                                .isEqualTo(Integer.parseInt(testData.getExpectedValues().get(s)));
+                        break;
+                    case "hasFieldNames":
+                        String [] fieldsToCheck =  testData.getExpectedValues().get(s)
+                                .replaceAll("\\s*,\\s*",",").split(",");
+                        for (String expectedFieldName : fieldsToCheck) {
+                            softAssertions.assertThat(response.jsonPath().getMap("$").containsKey(expectedFieldName))
+                                    .overridingErrorMessage(String.format("Field '%s' not found", expectedFieldName))
+                                    .isTrue();
+                        }
+                        break;
+                    case "numberOfFieldsTheSame":
+                        int expectedNumberOfFields =  testData.getExpectedValues().get("hasFieldNames")
+                                .replaceAll("\\s*,\\s*",",").split(",").length;
+                        int actualNumberOfFields = response.jsonPath().getMap("$").size();
+                        softAssertions.assertThat(actualNumberOfFields)
+                        .overridingErrorMessage(String.format("Actual number of fields '%s' vs. expected '%s'",
+                                actualNumberOfFields, expectedNumberOfFields))
+                        .isEqualTo(expectedNumberOfFields);
+                        break;
+                    case "username":
+                        String userNameActual = response.jsonPath().get("username");
+                        String userNameExpected = testData.getExpectedValues().get("username");
+                        softAssertions.assertThat(userNameActual)
+                                .overridingErrorMessage(String.format("Actual username '%s' vs. expected '%s'",
+                                        userNameActual, userNameExpected))
+                                .isEqualTo(userNameExpected);
+                        break;
+                    default:
+                        throw new IllegalArgumentException(String.format("Test '%s' is not implemented yet", testData.getExpectedValues().get(s)));
+                }
+            });
+            softAssertions.assertAll();
+        }
     }
 }
