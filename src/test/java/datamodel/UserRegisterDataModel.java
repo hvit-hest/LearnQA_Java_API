@@ -10,6 +10,7 @@ public class UserRegisterDataModel {
     private String testUrl;
     private String method;
     private String[] whatToTest;
+    private String testPrecondition;
     private Map<String, String> headers;
     private Map<String, String> cookies;
     private Map<String, String> userData;
@@ -57,6 +58,10 @@ public class UserRegisterDataModel {
         return expectedValues;
     }
 
+    public String getTestPrecondition() {
+        return testPrecondition;
+    }
+
     public void setUserData(Map<String, String> userData) {
         this.userData = userData;
     }
@@ -71,6 +76,10 @@ public class UserRegisterDataModel {
 
     public void setTestUrl(String testUrl) {
         this.testUrl = testUrl;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     @Override

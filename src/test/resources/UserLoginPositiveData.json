@@ -6,6 +6,7 @@
     "testType": "positive",
     "testUrl": "https://playground.learnqa.ru/api/user/login",
     "method": "post",
+    "//" : "in test the email and password have to be changed to real data of existent user to login ",
     "userData": {
       "email": "generateEmail",
       "password": "generatePassword"

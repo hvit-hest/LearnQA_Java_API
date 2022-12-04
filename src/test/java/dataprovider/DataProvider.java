@@ -23,14 +23,19 @@ public class DataProvider {
         return DataReaders.readDataFromJsonAlt("UserLoginPositiveData.json", UserRegisterDataModel[].class).stream();
     }
 
-
-    public static <T> List<T> provideUserRegisterDataList(String jsonFile, Class<T[]> dataClass) {
-        return DataReaders.readDataFromJsonAlt(jsonFile, dataClass);
+    public static <T> Stream<T> provideUserDataList(String jsonFile, Class<T[]> dataClass) {
+        return DataReaders.readDataFromJsonAlt(jsonFile, dataClass).stream();
     }
 
     public static Stream<UserRegisterDataModel> provideTakeUserInfoNegativeData() {
         return DataReaders
                 .readDataFromJsonAlt("UserInfoRequestNegativeData.json", UserRegisterDataModel[].class)
+                .stream();
+    }
+
+    public static Stream<UserRegisterDataModel> provideChangeUserInfoNegativeData() {
+        return DataReaders
+                .readDataFromJsonAlt("UserChangeRequestNegativeData.json", UserRegisterDataModel[].class)
                 .stream();
     }
 }

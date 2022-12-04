@@ -190,11 +190,11 @@ public class Assertions {
              response.then().assertThat().body(Matchers.hasXPath(String.format("//html/body[text()='%s']",testData.getExpectedValues().get(s))));
             response.then().assertThat().body(Matchers.hasXPath("//html/body", containsString(testData.getExpectedValues().get(s))));*/
 
-
-                        softAssertions.assertThat(response.getBody().htmlPath().getString("//html/body"))
+                        String bodyText = response.getBody().htmlPath().getString("//html/body");
+                        softAssertions.assertThat(!bodyText.equals("null") ? bodyText: null)
                                 .isEqualTo(testData.getExpectedValues().get(s));
                         break;
-                    case "responseCode":
+                     case "responseCode":
                         softAssertions.assertThat(response.statusCode())
                                 .isEqualTo(Integer.parseInt(testData.getExpectedValues().get(s)));
                         break;

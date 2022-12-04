@@ -55,7 +55,7 @@ public class ApiCoreRequests {
     @Step("{1}")
     public Response requestGenerator(UserRegisterDataModel testData, String requestDescription) {
         Response response;
-        RequestSpecification reqspec = RestAssured.given();
+        RequestSpecification reqspec = RestAssured.given().filter(new AllureRestAssured());
 
         if (testData.getCookies() != null) reqspec.cookies(testData.getCookies());
         if (testData.getHeaders() != null) reqspec.headers(testData.getHeaders());
@@ -71,6 +71,9 @@ public class ApiCoreRequests {
                 break;
             case "post":
                 response = reqspec.post(testData.getTestUrl());
+                break;
+            case "put":
+                response = reqspec.put(testData.getTestUrl());
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Method '%s' is not implemented yet", testData.getMethod()));

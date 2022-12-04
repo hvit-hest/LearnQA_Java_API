@@ -1,0 +1,82 @@
+[
+  {
+    "testID": "0016_changeUserDataNegative",
+    "testPrecondition" : "requestToChangeFromOtherUser",
+    "testDescription": "User's data can not be changed by other user",
+    "requestDescription": "Try to change user data using other user's authorisation, i.e. token 'x-csrf-token' & cookie 'auth_sid' ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "put",
+    "userData": {
+      "email": "generateEmail"
+    },
+    "whatToTest": [
+      "responseCode",
+      "textMessageInBody"
+    ],
+    "expectedValues": {
+      "textMessageInBody": null,
+      "responseCode": 200
+    }
+  },
+  {
+    "testID": "0017_changeUserDataNegative",
+    "testPrecondition" : "withoutAuthorization",
+    "testDescription": "User's data can not be changed without authorization ",
+    "requestDescription": "Try to change user data without authorization ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "put",
+    "userData": {
+      "email": "generateEmail"
+    },
+    "whatToTest": [
+      "responseCode",
+      "textMessageInBody"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "Auth token not supplied",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0018_changeUserDataNegative",
+    "testPrecondition" : "requestToChangeFromCurrentUser",
+    "testDescription": "User's email can not be changed if '@' is absent ",
+    "requestDescription": "Try to change user data without authorization ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "put",
+    "userData": {
+      "email": "16Tons"
+    },
+    "whatToTest": [
+      "responseCode",
+      "textMessageInBody"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "Invalid email format",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0019_changeUserDataNegative",
+    "testPrecondition" : "requestToChangeFromCurrentUser",
+    "testDescription": "User's firstName can not be changed if it is too short 'W' ",
+    "requestDescription": "Try to change user data without authorization ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "put",
+    "userData": {
+      "firstName": "W"
+    },
+    "whatToTest": [
+      "responseCode",
+      "textMessageInBody"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "{\"error\":\"Too short value for field firstName\"}",
+      "responseCode": 400
+    }
+  }
+]
