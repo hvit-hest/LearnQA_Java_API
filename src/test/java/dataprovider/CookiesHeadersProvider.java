@@ -1,26 +1,22 @@
 package dataprovider;
 
-import datamodel.DataModel;
+import datamodel.CookiesAndHeadersDataModel;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.stream.Stream;
 
 import static lib.DataGenerator.dateGenerator;
 
 public class CookiesHeadersProvider {
 
-    private static DataModel cookiesTestData = new DataModel()
+    private static CookiesAndHeadersDataModel cookiesTestData = new CookiesAndHeadersDataModel()
             .setTestUrl("https://playground.learnqa.ru/api/homework_cookie")
             .setMethod("get")
             .setWhatToTest("cookies")
             .setCookies(new HashMap<String, String>() {{
                 put("HomeWork", "hw_value");
             }});
-    private static DataModel headersTestData = new DataModel()
+    private static CookiesAndHeadersDataModel headersTestData = new CookiesAndHeadersDataModel()
             .setTestUrl("https://playground.learnqa.ru/api/homework_header")
             .setMethod("get")
             .setWhatToTest("headers")
@@ -36,7 +32,7 @@ public class CookiesHeadersProvider {
                 put("Expires", dateGenerator());
             }});
 
-    public static Stream<DataModel> provideTestData() {
+    public static Stream<CookiesAndHeadersDataModel> provideTestData() {
         return Stream.of(cookiesTestData, cookiesTestData.setMethod("post"),
                 headersTestData, headersTestData.setMethod("post"));
     }

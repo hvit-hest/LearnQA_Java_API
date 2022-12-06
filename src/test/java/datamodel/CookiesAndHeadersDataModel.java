@@ -3,7 +3,7 @@ package datamodel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataModel {
+public class CookiesAndHeadersDataModel {
     private String testUrl;
     private String method;
     private String whatToTest;
@@ -11,17 +11,17 @@ public class DataModel {
     private Map<String, String> headers = new HashMap();
 
 
-    public DataModel() {
+    public CookiesAndHeadersDataModel() {
     }
 
-    public DataModel(String testUrl, String method, Map<String, String> cookies, Map<String, String> headers) {
+    public CookiesAndHeadersDataModel(String testUrl, String method, Map<String, String> cookies, Map<String, String> headers) {
         this.testUrl = testUrl;
         this.method = method;
         this.cookies = cookies;
         this.headers = headers;
     }
 
-    public DataModel setTestUrl(String testUrl) {
+    public CookiesAndHeadersDataModel setTestUrl(String testUrl) {
         this.testUrl = testUrl;
         return this;
     }
@@ -30,7 +30,7 @@ public class DataModel {
         return this.testUrl;
     }
 
-    public DataModel setMethod(String method) {
+    public CookiesAndHeadersDataModel setMethod(String method) {
         this.method = method;
         return this;
     }
@@ -39,7 +39,7 @@ public class DataModel {
         return this.method;
     }
 
-    public DataModel setCookies(Map<String, String> cookies) {
+    public CookiesAndHeadersDataModel setCookies(Map<String, String> cookies) {
         this.cookies = cookies;
         return this;
     }
@@ -48,7 +48,7 @@ public class DataModel {
         return this.cookies;
     }
 
-    public DataModel setHeaders(Map<String, String> headers) {
+    public CookiesAndHeadersDataModel setHeaders(Map<String, String> headers) {
         this.headers = headers;
         return this;
     }
@@ -57,7 +57,7 @@ public class DataModel {
         return this.headers;
     }
 
-    public DataModel setWhatToTest(String whatToTest) {
+    public CookiesAndHeadersDataModel setWhatToTest(String whatToTest) {
         this.whatToTest = whatToTest;
         return this;
     }

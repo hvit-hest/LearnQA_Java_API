@@ -1,4 +1,4 @@
-import datamodel.DataModel;
+import datamodel.CookiesAndHeadersDataModel;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -16,7 +16,7 @@ public class CookiesAndHeadersTest {
 
     @ParameterizedTest
     @MethodSource("dataprovider.CookiesHeadersProvider#provideTestData")
-    public void checkCookiesAndHeadersTest(DataModel testData) {
+    public void checkCookiesAndHeadersTest(CookiesAndHeadersDataModel testData) {
         RequestSpecification spec = RestAssured.given();
         spec.baseUri(testData.getTestUrl());
         switch (testData.getMethod()) {

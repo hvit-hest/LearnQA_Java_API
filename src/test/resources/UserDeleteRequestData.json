@@ -1,0 +1,52 @@
+[
+  {
+    "testID": "0017_deleteUserNegative",
+    "testPrecondition": "User with id 2 authorized",
+    "testDescription": "User with id 2 can not be deleted",
+    "requestDescription": "DELETE: Attempt to delete user with id 2 ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "delete",
+    "whatToTest": [
+      "responseCode",
+      "textMessageInBody"
+    ],
+    "expectedValues": {
+      "textMessageInBody": "Please, do not delete test users with ID 1, 2, 3, 4 or 5.",
+      "responseCode": 400
+    }
+  },
+  {
+    "testID": "0018_deleteUserPositive",
+    "testPrecondition": "Create user, login then delete a user",
+    "testDescription": "User delete himself and can not login",
+    "requestDescription": "Delete user ",
+    "testType": "positive",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "delete",
+    "whatToTest": [
+    "textMessageInBody",
+     "responseCode"
+    ],
+    "expectedValues": {
+      "textMessageInBody": null,
+      "responseCode": 200
+    }
+  },
+  {
+    "testID": "0019_deleteUserNegative",
+    "testPrecondition": "Create user1, user2. Login user2. Try to delete user1",
+    "testDescription": "User can not be deleted by another user",
+    "requestDescription": "Try to delete user being authorized as another user ",
+    "testType": "negative",
+    "testUrl": "https://playground.learnqa.ru/api/user/%s",
+    "method": "delete",
+    "whatToTest": [
+      "responseCode"
+    ],
+    "//": "responseCode: 200. But. In this case it has be 400 ?",
+    "expectedValues": {
+      "responseCode": 200
+    }
+  }
+]

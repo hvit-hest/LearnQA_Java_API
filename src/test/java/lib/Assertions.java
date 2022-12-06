@@ -1,5 +1,6 @@
 package lib;
 
+import datamodel.UserRegisterDataModel;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;
@@ -7,11 +8,12 @@ import org.assertj.core.api.SoftAssertions;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -73,7 +75,7 @@ public class Assertions {
                     .isTrue();
 
             if (cookiesActual.containsKey(cookieNameExpected))
-            softAssertions.assertThat(cookiesActual.get(cookieNameExpected))
+                softAssertions.assertThat(cookiesActual.get(cookieNameExpected))
                         .overridingErrorMessage(String.format("'%s' cookie has wrong value '%s'",
                                 cookieNameExpected, cookiesActual.get(cookieNameExpected)))
                         .isEqualTo(cookieValueExpected);
@@ -109,18 +111,19 @@ public class Assertions {
                         headerValueExpected, headersActual.get(headerNameExpected).getValue()));
     }
 
-    public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap, boolean compareSize) {
+    public static void mapContains(Response response, String whereToGetActualMap, Map<String, String> expectedMap, boolean compareSize) {
         String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
         String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
         String assertMessageIfSizeIsDifferent = "Actual map size '%s' vs. expected map size '%s'";
+        Map<String, String> actualMap = response.body().jsonPath().getMap(whereToGetActualMap);
 
         //add-on to JUnit
         SoftAssertions softAssertions = new SoftAssertions();
 
-        if (compareSize)
-        { softAssertions.assertThat(actualMap.size() == expectedMap.size())
-            .overridingErrorMessage(String.format(assertMessageIfSizeIsDifferent, actualMap.size(), expectedMap.size()))
-            .isTrue();
+        if (compareSize) {
+            softAssertions.assertThat(actualMap.size() == expectedMap.size())
+                    .overridingErrorMessage(String.format(assertMessageIfSizeIsDifferent, actualMap.size(), expectedMap.size()))
+                    .isTrue();
         }
 
         expectedMap.entrySet().forEach(entry -> {
@@ -132,10 +135,41 @@ public class Assertions {
                     .isTrue();
 
             if (actualMap.containsKey(expectedKey))
-            softAssertions.assertThat(actualMap.get(expectedKey))
-                    .overridingErrorMessage(String.format(assertMessageIfFailToCompare,
-                            actualMap.get(expectedKey), expectedValue, expectedKey))
-                    .isEqualTo(expectedValue);
+                softAssertions.assertThat(actualMap.get(expectedKey))
+                        .overridingErrorMessage(String.format(assertMessageIfFailToCompare,
+                                actualMap.get(expectedKey), expectedValue, expectedKey))
+                        .isEqualTo(expectedValue);
+        });
+        softAssertions.assertAll();
+    }
+
+    public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap, boolean compareSize) {
+        String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
+        String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
+        String assertMessageIfSizeIsDifferent = "Actual map size '%s' vs. expected map size '%s'";
+
+        //add-on to JUnit
+        SoftAssertions softAssertions = new SoftAssertions();
+
+        if (compareSize) {
+            softAssertions.assertThat(actualMap.size() == expectedMap.size())
+                    .overridingErrorMessage(String.format(assertMessageIfSizeIsDifferent, actualMap.size(), expectedMap.size()))
+                    .isTrue();
+        }
+
+        expectedMap.entrySet().forEach(entry -> {
+            String expectedKey = entry.getKey();
+            String expectedValue = entry.getValue();
+
+            softAssertions.assertThat(actualMap.containsKey(expectedKey))
+                    .overridingErrorMessage(String.format(assertMessageIfKeyIsAbsent, expectedKey))
+                    .isTrue();
+
+            if (actualMap.containsKey(expectedKey))
+                softAssertions.assertThat(actualMap.get(expectedKey))
+                        .overridingErrorMessage(String.format(assertMessageIfFailToCompare,
+                                actualMap.get(expectedKey), expectedValue, expectedKey))
+                        .isEqualTo(expectedValue);
         });
         softAssertions.assertAll();
     }
@@ -159,18 +193,74 @@ public class Assertions {
 
     public static void assertResponseCodeEquals(Response response, int expectedStatusCode) {
         assertEquals(expectedStatusCode, response.statusCode(),
-                String.format("Status Code is different. Expected '%s' vs. Actual '%s'", expectedStatusCode,response.statusCode()));
+                String.format("Status Code is different. Expected '%s' vs. Actual '%s'", expectedStatusCode, response.statusCode()));
     }
 
     public static void assertJsonHasField(Response response, String expectedFieldName) {
         response.then().assertThat().body("$", hasKey(expectedFieldName));
     }
+
     public static void assertJsonHasFields(Response response, String[] expectedFieldNames) {
         for (String expectedFieldName : expectedFieldNames) {
             assertJsonHasField(response, expectedFieldName);
         }
     }
+
     public static void assertJsonHasNotField(Response response, String unexpectedFieldName) {
         response.then().assertThat().body("$", not(hasKey(unexpectedFieldName)));
     }
-}
+
+    public static void assertResponse(Response response, UserRegisterDataModel testData) {
+        if (testData.getWhatToTest() != null && testData.getWhatToTest().length != 0) {
+            //add-on to JUnit
+            SoftAssertions softAssertions = new SoftAssertions();
+            Arrays.stream(testData.getWhatToTest()).forEach(s -> {
+                //WhatToTest - array from json
+                switch (s) {
+                    case "textMessageInBody":
+             /* Try to use it one day
+             response.then().assertThat().body(Matchers.hasXPath(String.format("//html/body[text()='%s']",testData.getExpectedValues().get(s))));
+            response.then().assertThat().body(Matchers.hasXPath("//html/body", containsString(testData.getExpectedValues().get(s))));*/
+
+                        String bodyText = response.getBody().htmlPath().getString("//html/body");
+                        softAssertions.assertThat(!bodyText.equals("null") ? bodyText: null)
+                                .isEqualTo(testData.getExpectedValues().get(s));
+                        break;
+                     case "responseCode":
+                        softAssertions.assertThat(response.statusCode())
+                                .isEqualTo(Integer.parseInt(testData.getExpectedValues().get(s)));
+                        break;
+                    case "hasFieldNames":
+                        String [] fieldsToCheck =  testData.getExpectedValues().get(s)
+                                .replaceAll("\\s*,\\s*",",").split(",");
+                        for (String expectedFieldName : fieldsToCheck) {
+                            softAssertions.assertThat(response.jsonPath().getMap("$").containsKey(expectedFieldName))
+                                    .overridingErrorMessage(String.format("Field '%s' not found", expectedFieldName))
+                                    .isTrue();
+                        }
+                        break;
+                    case "numberOfFieldsTheSame":
+                        int expectedNumberOfFields =  testData.getExpectedValues().get("hasFieldNames")
+                                .replaceAll("\\s*,\\s*",",").split(",").length;
+                        int actualNumberOfFields = response.jsonPath().getMap("$").size();
+                        softAssertions.assertThat(actualNumberOfFields)
+                        .overridingErrorMessage(String.format("Actual number of fields '%s' vs. expected '%s'",
+                                actualNumberOfFields, expectedNumberOfFields))
+                        .isEqualTo(expectedNumberOfFields);
+                        break;
+                    case "username":
+                        String userNameActual = response.jsonPath().get("username");
+                        String userNameExpected = testData.getExpectedValues().get("username");
+                        softAssertions.assertThat(userNameActual)
+                                .overridingErrorMessage(String.format("Actual username '%s' vs. expected '%s'",
+                                        userNameActual, userNameExpected))
+                                .isEqualTo(userNameExpected);
+                        break;
+                    default:
+                        throw new IllegalArgumentException(String.format("Test '%s' is not implemented yet", testData.getExpectedValues().get(s)));
+                }
+            });
+            softAssertions.assertAll();
+        }
+    }
+ }
