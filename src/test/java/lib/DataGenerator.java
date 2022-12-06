@@ -59,8 +59,7 @@ public class DataGenerator {
             String value = entry.getValue();;
             switch (value) {
                     case "generateUserName":
-                        //2 -inclusive,251 -exclusive
-                        userData.put(key, RandomStringUtils.randomAlphanumeric(2,251));
+                        userData.put(key, generateUserName());
                         break;
                     case "generateFirstName":
                         userData.put(key, randomFirstName());
@@ -76,8 +75,7 @@ public class DataGenerator {
                         userData.put(key, RandomStringUtils.randomAlphanumeric(251));
                         break;
                     case "generatePassword":
-                        //2 -inclusive,251 -exclusive
-                        userData.put(key, RandomStringUtils.randomAlphanumeric(2,251));
+                        userData.put(key, generatePassword());
                         break;
                 }
          }
@@ -106,5 +104,15 @@ public class DataGenerator {
     }
     private static String getUniqueIdLight() {
         return String.format("%s_%s", randomFirstName(), System.currentTimeMillis());
+    }
+
+    public static String generatePassword() {
+        //2 -inclusive,251 -exclusive
+        return RandomStringUtils.randomAlphanumeric(2,251);
+    }
+
+    public static String generateUserName() {
+        //2 -inclusive,251 -exclusive
+        return RandomStringUtils.randomAlphanumeric(2,251);
     }
 }

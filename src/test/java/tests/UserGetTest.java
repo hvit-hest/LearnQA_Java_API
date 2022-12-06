@@ -1,7 +1,7 @@
 package tests;
 
+import datamodel.User;
 import datamodel.UserRegisterDataModel;
-import dataprovider.DataProvider;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Feature;
 import io.restassured.RestAssured;
@@ -66,42 +66,35 @@ public class UserGetTest extends BaseTestCase {
     public void takeUserInfoNegativeTest(UserRegisterDataModel testData) {
         Allure.description(testData.getTestDescription());
 
-
         //CREATE TWO USERS
         /*create  two users for the test
         We need to create two users. It is the test precondition since we assume our DB in the test environment can be cleaned
         before test run
          */
-        UserRegisterDataModel createFirstUserData = DataProvider.provideUserRegisterPositiveData().findFirst().get();
-        Response responseFirstUser = apiCoreRequests.requestGenerator(createFirstUserData, "POST Create first user");
-        String userID = responseFirstUser.body().jsonPath().get("id");
-        String username = createFirstUserData.getUserData().get("username");
-        UserRegisterDataModel createSecondUserData = DataProvider.provideUserRegisterPositiveData().findFirst().get();
-        apiCoreRequests.requestGenerator(createSecondUserData, "POST Create second user");
-
+        User user1 = apiCoreRequests.createUser();
+        user1.setUserID();
+        String username1 = user1.getUserData().get("username");
+        User user2 = apiCoreRequests.createUser();
+        user2.setUserID();
         //SECOND USER LOGIN
-        //createUserData changed after work of requestGenerator
-
-        UserRegisterDataModel loginUserData = DataProvider.provideUserLoginPositiveData().findFirst().get();
-        loginUserData.setUserData(new HashMap<String, String>() {{
-            put("email", createSecondUserData.getUserData().get("email"));
-            put("password", createSecondUserData.getUserData().get("password"));
-        }});
-
-        Response responseLoginUser = apiCoreRequests.requestGenerator(loginUserData, loginUserData.getRequestDescription());
-
+        apiCoreRequests.loginUser(user2);
         //SECOND USER TRIES TO GET DATA OF FIRST ONE
-        testData.setCookies(new HashMap<String, String>() {{
-            put("auth_sid", responseLoginUser.cookie("auth_sid"));
-        }});
-        testData.setHeaders(new HashMap<String, String>() {{
-            put("x-csrf-token", responseLoginUser.header("x-csrf-token"));
-        }});
-        //we know response code expected but don't know username of the created user so we add it to our data json
-        testData.getExpectedValues().put("username", username);
-        testData.setTestUrl(String.format(testData.getTestUrl(), userID));
+        //we know response code expected but don't know username generated of the created user so we add it to our data json
+        testData.getExpectedValues().put("username", username1);
+        testData.setTestUrl(String.format(testData.getTestUrl(), user1.getUserID()));
+        //working with the test's json: request, assertions
         Response responseGetUserData = apiCoreRequests.requestGenerator(testData, testData.getRequestDescription());
-
         Assertions.assertResponse(responseGetUserData, testData);
+
+        //or alternatively
+        apiCoreRequests.getUser1ByUser2(user1, user2);
+        //check that we have username only (true) with correct value and response code
+
+        Assertions.mapContains(user2.getResponse("getResponse"), "$",
+                new HashMap() {{
+                    put("username", username1);
+                }}, true);
+        //feature or bug? Do we want to have 400?
+        Assertions.assertResponseCodeEquals(user2.getResponse("getResponse"), 200);
     }
 }

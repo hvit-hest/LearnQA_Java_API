@@ -111,6 +111,38 @@ public class Assertions {
                         headerValueExpected, headersActual.get(headerNameExpected).getValue()));
     }
 
+    public static void mapContains(Response response, String whereToGetActualMap, Map<String, String> expectedMap, boolean compareSize) {
+        String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
+        String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
+        String assertMessageIfSizeIsDifferent = "Actual map size '%s' vs. expected map size '%s'";
+        Map<String, String> actualMap = response.body().jsonPath().getMap(whereToGetActualMap);
+
+        //add-on to JUnit
+        SoftAssertions softAssertions = new SoftAssertions();
+
+        if (compareSize) {
+            softAssertions.assertThat(actualMap.size() == expectedMap.size())
+                    .overridingErrorMessage(String.format(assertMessageIfSizeIsDifferent, actualMap.size(), expectedMap.size()))
+                    .isTrue();
+        }
+
+        expectedMap.entrySet().forEach(entry -> {
+            String expectedKey = entry.getKey();
+            String expectedValue = entry.getValue();
+
+            softAssertions.assertThat(actualMap.containsKey(expectedKey))
+                    .overridingErrorMessage(String.format(assertMessageIfKeyIsAbsent, expectedKey))
+                    .isTrue();
+
+            if (actualMap.containsKey(expectedKey))
+                softAssertions.assertThat(actualMap.get(expectedKey))
+                        .overridingErrorMessage(String.format(assertMessageIfFailToCompare,
+                                actualMap.get(expectedKey), expectedValue, expectedKey))
+                        .isEqualTo(expectedValue);
+        });
+        softAssertions.assertAll();
+    }
+
     public static void mapContains(Map<String, String> actualMap, Map<String, String> expectedMap, boolean compareSize) {
         String assertMessageIfFailToCompare = "Actual value '%s'does not equal expected value '%s' for key '%s'";
         String assertMessageIfKeyIsAbsent = "Key '%s' is not found";
@@ -231,4 +263,4 @@ public class Assertions {
             softAssertions.assertAll();
         }
     }
-}
+ }

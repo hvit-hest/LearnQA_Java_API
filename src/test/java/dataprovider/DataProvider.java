@@ -38,4 +38,10 @@ public class DataProvider {
                 .readDataFromJsonAlt("UserChangeRequestNegativeData.json", UserRegisterDataModel[].class)
                 .stream();
     }
+
+    public static Stream<UserRegisterDataModel> provideDeleteUserData() {
+        return DataReaders
+                .readDataFromJsonAlt("UserDeleteRequestData.json", UserRegisterDataModel[].class)
+                .stream();
+    }
 }
