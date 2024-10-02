@@ -113,4 +113,10 @@ public class User {
     public void setUserID() {
         this.userID = lastResponses.get("createResponse").body().jsonPath().get("id");
     }
+
+@Override
+public String toString() {
+        String userAsString = "UserID: " + userID + userData.toString();
+return  userAsString;
  }
+}
