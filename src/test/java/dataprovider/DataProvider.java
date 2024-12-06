@@ -9,11 +9,7 @@ import java.util.stream.Stream;
 public class DataProvider {
     /*it works also
     DataReaders.readUserRegisterDataFromJson(userRegisterDataFile);*/
-    public static Stream<UserRegisterDataModel> provideUserRegisterNegativeData() {
-        return DataReaders
-                .readDataFromJsonAlt("UserRegisterNegativeData.json", UserRegisterDataModel[].class)
-                .stream();
-    }
+     
 
     public static Stream<UserRegisterDataModel> provideUserRegisterPositiveData() {
         return DataReaders.readDataFromJsonAlt("UserRegisterPositiveData.json", UserRegisterDataModel[].class).stream();
